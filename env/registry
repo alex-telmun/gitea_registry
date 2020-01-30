@@ -1,0 +1,7 @@
+REGISTRY_HTTP_HOST=https://registry.your-domain.com
+REGISTRY_HTTP_ADDR=0.0.0.0:443
+REGISTRY_HTTP_TLS_CERTIFICATE=/certs/certificate.crt.template
+REGISTRY_HTTP_TLS_KEY=/certs/private.key.template
+REGISTRY_AUTH=htpasswd
+REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd
+REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm

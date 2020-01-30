@@ -1,0 +1,65 @@
+version: '3.5'
+
+services:
+  gitea:
+    image: gitea/gitea:latest
+    container_name: gitea-server
+    hostname: gitea
+    env_file: ./env/gitea
+    ports:
+      - '3000:3000'
+      - '222:22'
+    volumes:
+      - ./certs:/certs
+      - ./gitea/data:/data
+      - ./gitea/timezone:/etc/timezone:ro
+      - ./gitea/localtime:/etc/localtime:ro
+    restart: always
+    depends_on:
+      - registry
+      - postgres
+    networks:
+      - net
+
+  postgres:
+    build:
+      args:
+        - POSTGRES_UID=$CONTAINER_UID
+        - POSTGRES_GID=$CONTAINER_GID
+      context: ./postgres/src/
+    image: registry.your-domain.com:443/postgres:gitea
+    container_name: postgres-server
+    hostname: postgres
+    env_file: ./env/postgres
+    volumes:
+      - ./postgres/data:/var/lib/postgresql/data:rw
+      - ./postgres/dumps:/var/lib/postgresql/dumps:rw
+    restart: always
+    depends_on:
+      - registry
+    networks:
+      - net
+
+  postgres-data:
+    image: busybox:latest
+    container_name: postgres-data
+    hostname: postgres
+    volumes:
+      - ./postgres/data:/var/lib/postgresql/data:rw
+      - ./postgres/dumps:/var/lib/postgresql/dumps:rw
+
+  registry:
+    image: registry:2.7.1
+    container_name: registry
+    hostname: registry
+    env_file: ./env/registry
+    ports:
+      - '443:443'
+    volumes:
+      - ./registry/data:/var/lib/registry
+      - ./registry/auth:/auth
+      - ./certs:/certs
+    restart: always
+
+networks:
+  net:

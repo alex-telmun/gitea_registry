@@ -1,0 +1,10 @@
+/.*
+!/.gitignore
+!/.env_file
+/gitea/*
+!/gitea/localtime
+!/gitea/timezone
+/postgres/*
+!/postgres/src
+/registry/*
+!/registry/auth
